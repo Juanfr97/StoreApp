@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.fakestore.data_access.repositories.ProductRepositoryImpl
 import com.example.fakestore.data_access.source.ProductService
 import com.example.fakestore.domain.repository.ProductRepository
+import com.example.fakestore.ui.use_cases.GetProduct
 import com.example.fakestore.ui.use_cases.GetProducts
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
@@ -18,6 +19,7 @@ interface AppModule {
     val productService : ProductService
     val productRepository : ProductRepository
     val getProductsUseCase : GetProducts
+    val getProductUseCase : GetProduct
 }
 
 class AppModuleImpl(
@@ -48,5 +50,8 @@ class AppModuleImpl(
     }
     override val getProductsUseCase: GetProducts by lazy {
         GetProducts(productRepository)
+    }
+    override val getProductUseCase: GetProduct by lazy {
+        GetProduct(productRepository)
     }
 }

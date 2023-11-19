@@ -7,5 +7,6 @@
     <color name="card_background">#FFFFFFFF</color>
     <color name="text_primary">#565865</color>
     <color name="text_secondary">#9B9A9D</color>
-    <color name="primary">#8B72FF</color>
+    <color name="primary">#58355E</color>
+    <color name="secondary">#E5DADA</color>
 </resources>

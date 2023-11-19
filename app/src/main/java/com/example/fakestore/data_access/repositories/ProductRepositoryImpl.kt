@@ -10,4 +10,8 @@ class ProductRepositoryImpl(
     override suspend fun getProducts(): List<Product> {
         return productService.getProducts()
     }
+
+    override suspend fun getProductById(productId: Int): Product {
+        return productService.getProductById(productId)
+    }
 }
