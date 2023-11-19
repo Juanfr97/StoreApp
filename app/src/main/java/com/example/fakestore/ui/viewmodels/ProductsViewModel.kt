@@ -6,11 +6,13 @@ import com.example.fakestore.ui.events.ProductsEvent
 import com.example.fakestore.ui.states.ApiResult
 import com.example.fakestore.ui.states.ProductsState
 import com.example.fakestore.ui.use_cases.GetProducts
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class ProductsViewModel(
     private val getProductsUseCase: GetProducts
@@ -25,11 +27,18 @@ class ProductsViewModel(
     fun onEvent(event: ProductsEvent) {
         when(event) {
             is ProductsEvent.OnSearch -> {
-                val query = event.query
-                val filteredList = productsState.value.products?.filter {
-                    it.title.contains(query, true)
+                viewModelScope.launch {
+                    val query = event.query
+                    val filteredList = productsState.value.products?.filter {
+                        it.title.contains(query, true)
+                    }
+                    _productsState.value = _productsState.value.copy(products = filteredList)
                 }
-                _productsState.value = _productsState.value.copy(products = filteredList)
+
+            }
+
+            ProductsEvent.OnInit -> {
+                getProducts()
             }
         }
     }
@@ -42,7 +51,7 @@ class ProductsViewModel(
                     _productsState.value = ProductsState(isLoading = true)
                 }
                 is ApiResult.Success -> {
-                    _productsState.value = ProductsState(products = result.data)
+                    _productsState.value = ProductsState(products = result.data, isLoading = false)
                 }
                 is ApiResult.Error -> {
                     _productsState.value = ProductsState(error = result.message ?: "Ocurrió un error")
